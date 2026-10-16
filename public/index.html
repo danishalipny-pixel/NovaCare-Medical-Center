@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaCare | Enterprise Hospital Management System</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><path d='M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z'/></svg>">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              800: '#0c4a6e',
+              900: '#0f172a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Custom Master Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 flex h-screen overflow-hidden">
+
+  <!-- ==================================================================== -->
+  <!-- Toast Notification Container                                         -->
+  <!-- ==================================================================== -->
+  <div id="toastContainer"></div>
+
+  <!-- ==================================================================== -->
+  <!-- Sidebar Navigation                                                   -->
+  <!-- ==================================================================== -->
+  <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 z-20 shadow-xl border-r border-slate-800">
+    <!-- Brand Header -->
+    <div class="h-16 flex items-center px-6 bg-slate-950/60 border-b border-slate-800 space-x-3">
+      <div class="w-9 h-9 rounded-lg bg-sky-600 flex items-center justify-center text-white shadow-md shadow-sky-600/30">
+        <i class="fa-solid fa-hospital text-lg"></i>
+      </div>
+      <div>
+        <h1 class="text-base font-bold text-white tracking-wide leading-tight">NovaCare</h1>
+        <p class="text-[10px] text-sky-400 font-medium tracking-wider uppercase">Hospital OS v1.0</p>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <div class="px-3 pb-2 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Clinical Modules</div>
+
+      <a href="#dashboard" data-module="dashboard" class="nav-link active flex items-center px-3 py-2.5 text-sm rounded-lg hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-chart-pie w-5 text-sky-400 mr-2 text-center"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="#patients" data-module="patients" class="nav-link flex items-center px-3 py-2.5 text-sm rounded-lg hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-hospital-user w-5 text-emerald-400 mr-2 text-center"></i>
+        <span>Patients Directory</span>
+      </a>
+
+      <a href="#appointments" data-module="appointments" class="nav-link flex items-center px-3 py-2.5 text-sm rounded-lg hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-calendar-check w-5 text-indigo-400 mr-2 text-center"></i>
+        <span>Appointments</span>
+      </a>
+
+      <a href="#doctors" data-module="doctors" class="nav-link flex items-center px-3 py-2.5 text-sm rounded-lg hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-user-doctor w-5 text-teal-400 mr-2 text-center"></i>
+        <span>Doctors & Staff</span>
+      </a>
+
+      <a href="#emr" data-module="emr" class="nav-link flex items-center px-3 py-2.5 text-sm rounded-lg hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-notes-medical w-5 text-purple-400 mr-2 text-center"></i>
+        <span>Clinical / EMR</span>
+      </a>
+
+      <div class="px-3 pt-4 pb-2 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Facilities & Supply</div>
+
+      <a href="#beds" data-module="beds" class="nav-link flex items-center px-3 py-2.5 text-sm rounded-lg hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-bed-pulse w-5 text-rose-400 mr-2 text-center"></i>
+        <span>Wards & Beds</span>
+      </a>
+
+      <a href="#pharmacy" data-module="pharmacy" class="nav-link flex items-center px-3 py-2.5 text-sm rounded-lg hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-prescription-bottle-medical w-5 text-amber-400 mr-2 text-center"></i>
+        <span>Pharmacy Inventory</span>
+      </a>
+
+      <div class="px-3 pt-4 pb-2 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Administration</div>
+
+      <a href="#billing" data-module="billing" class="nav-link flex items-center px-3 py-2.5 text-sm rounded-lg hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-file-invoice-dollar w-5 text-green-400 mr-2 text-center"></i>
+        <span>Billing & Invoices</span>
+      </a>
+
+      <a href="#diagnostics" data-module="diagnostics" class="nav-link flex items-center px-3 py-2.5 text-sm rounded-lg hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-heart-pulse w-5 text-sky-400 mr-2 text-center"></i>
+        <span>System Diagnostics</span>
+      </a>
+    </nav>
+
+    <!-- Sidebar Bottom: Live Health Status -->
+    <div class="p-3 bg-slate-950/40 border-t border-slate-800">
+      <div class="flex items-center justify-between text-xs px-2 py-1.5 rounded bg-slate-800/60">
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-slate-300 font-medium">API Cluster</span>
+        </div>
+        <span class="text-[10px] font-mono text-emerald-400 uppercase">ONLINE</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================================================================== -->
+  <!-- Main Content Area                                                    -->
+  <!-- ==================================================================== -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+    <!-- Topbar Header -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10">
+      <div class="flex items-center space-x-4">
+        <h2 class="text-lg font-bold text-slate-800 tracking-tight" id="pageHeaderTitle">NovaCare Medical Center</h2>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-800 border border-sky-200">
+          <i class="fa-solid fa-shield-halved mr-1"></i>Production Live Engine
+        </span>
+      </div>
+
+      <!-- User Session Actions -->
+      <div class="flex items-center space-x-4" id="userProfileSection">
+        <div class="text-right">
+          <div class="text-sm font-semibold text-slate-800" id="currentUserName">Guest Staff</div>
+          <div class="text-xs text-sky-600 font-medium uppercase tracking-wide" id="currentUserRole">Authenticating...</div>
+        </div>
+
+        <button id="logoutBtn" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Sign Out">
+          <i class="fa-solid fa-right-from-bracket text-base"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Module Container -->
+    <main class="flex-1 overflow-y-auto p-8 bg-slate-50">
+
+      <!-- ================================================================ -->
+      <!-- 1. DASHBOARD MODULE                                              -->
+      <!-- ================================================================ -->
+      <section id="view-dashboard" class="module-view space-y-8">
+        <!-- 6 Core KPI Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
+          <!-- Active Patients -->
+          <div class="kpi-card bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-slate-500 mb-2">
+              <span class="text-xs font-semibold uppercase tracking-wider">Active Patients</span>
+              <div class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center"><i class="fa-solid fa-hospital-user"></i></div>
+            </div>
+            <div class="text-2xl font-bold text-slate-900" id="kpiTotalPatients">0</div>
+            <span class="text-[11px] text-emerald-600 font-medium"><i class="fa-solid fa-circle-check mr-1"></i>Registered UHID</span>
+          </div>
+
+          <!-- Today's Appointments -->
+          <div class="kpi-card bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-slate-500 mb-2">
+              <span class="text-xs font-semibold uppercase tracking-wider">Today's Visits</span>
+              <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"><i class="fa-solid fa-calendar-day"></i></div>
+            </div>
+            <div class="text-2xl font-bold text-slate-900" id="kpiTodayAppointments">0</div>
+            <span class="text-[11px] text-indigo-600 font-medium"><i class="fa-solid fa-stethoscope mr-1"></i>Scheduled Today</span>
+          </div>
+
+          <!-- Bed Occupancy -->
+          <div class="kpi-card bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-slate-500 mb-2">
+              <span class="text-xs font-semibold uppercase tracking-wider">Bed Occupancy</span>
+              <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center"><i class="fa-solid fa-bed"></i></div>
+            </div>
+            <div class="text-2xl font-bold text-slate-900" id="kpiBedOccupancy">0%</div>
+            <span class="text-[11px] text-rose-600 font-medium"><i class="fa-solid fa-hospital-wide mr-1"></i>Inpatient Wards</span>
+          </div>
+
+          <!-- Today Revenue -->
+          <div class="kpi-card bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-slate-500 mb-2">
+              <span class="text-xs font-semibold uppercase tracking-wider">Today's Revenue</span>
+              <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-dollar-sign"></i></div>
+            </div>
+            <div class="text-2xl font-bold text-slate-900" id="kpiTodayRevenue">$0.00</div>
+            <span class="text-[11px] text-emerald-600 font-medium"><i class="fa-solid fa-arrow-trend-up mr-1"></i>Settled Collections</span>
+          </div>
+
+          <!-- Pending Invoices -->
+          <div class="kpi-card bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-slate-500 mb-2">
+              <span class="text-xs font-semibold uppercase tracking-wider">Pending Dues</span>
+              <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid fa-file-invoice"></i></div>
+            </div>
+            <div class="text-xl font-bold text-slate-900" id="kpiPendingInvoices">0 ($0)</div>
+            <span class="text-[11px] text-amber-600 font-medium"><i class="fa-solid fa-clock mr-1"></i>Receivable balance</span>
+          </div>
+
+          <!-- Low Stock Medicine Alerts -->
+          <div class="kpi-card bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between text-slate-500 mb-2">
+              <span class="text-xs font-semibold uppercase tracking-wider">Critical Stock</span>
+              <div class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center"><i class="fa-solid fa-capsules"></i></div>
+            </div>
+            <div class="text-2xl font-bold text-slate-900" id="kpiLowStockAlerts">0</div>
+            <span class="text-[11px] text-red-600 font-medium"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Reorder Alerts</span>
+          </div>
+        </div>
+
+        <!-- Visual Analytics Row (Chart.js) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Weekly Appointment Trend -->
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-bold text-slate-800 text-base">Weekly Patient Outflow & Trends</h3>
+                <p class="text-xs text-slate-500">Total appointments booked across the past 7 clinical days</p>
+              </div>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded bg-sky-50 text-sky-700">Live DB Metrics</span>
+            </div>
+            <div class="h-64 relative">
+              <canvas id="chartWeeklyTrend"></canvas>
+            </div>
+          </div>
+
+          <!-- Bed Occupancy by Ward -->
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-bold text-slate-800 text-base">Bed Allocation by Ward</h3>
+                <p class="text-xs text-slate-500">ICU, Medical, Pediatric, & Private</p>
+              </div>
+            </div>
+            <div class="h-64 relative">
+              <canvas id="chartWardOccupancy"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary Row: Department Distribution & Recent Activity Feed -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm lg:col-span-2">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-bold text-slate-800 text-base">Department Consultation Volume</h3>
+                <p class="text-xs text-slate-500">Distribution across Cardiology, Neurology, Pediatrics, Orthopedics & Medicine</p>
+              </div>
+            </div>
+            <div class="h-64 relative">
+              <canvas id="chartDeptDist"></canvas>
+            </div>
+          </div>
+
+          <!-- Real-Time Activity Stream -->
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-3">
+              <h3 class="font-bold text-slate-800 text-base">Clinical Audit Feed</h3>
+              <span class="text-[10px] text-slate-400 font-mono uppercase">Append-Only</span>
+            </div>
+            <div class="flex-1 overflow-y-auto space-y-2 max-h-64 pr-1" id="recentActivityList">
+              <p class="text-sm text-gray-500 py-4">Loading hospital activity stream...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- 2. PATIENTS DIRECTORY MODULE                                     -->
+      <!-- ================================================================ -->
+      <section id="view-patients" class="module-view hidden space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <!-- Search Input -->
+            <div class="relative w-full sm:w-80">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+              <input type="text" id="patientSearchInput" placeholder="Search by UHID, patient name, or phone..."
+                     class="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+            </div>
+            <!-- Gender Filter -->
+            <select id="patientGenderFilter" class="py-2 px-3 border border-slate-300 rounded-lg text-sm bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <option value="ALL">All Genders</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <button onclick="window.NovaCareApp.openModal('registerPatientModal')" class="w-full sm:w-auto px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-semibold hover:bg-sky-700 transition flex items-center justify-center shadow-sm">
+            <i class="fa-solid fa-user-plus mr-2"></i>Register New Patient
+          </button>
+        </div>
+
+        <!-- Patients Table Card -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <th class="py-3 px-4">UHID</th>
+                  <th class="py-3 px-4">Patient Name</th>
+                  <th class="py-3 px-4">Demographics</th>
+                  <th class="py-3 px-4">Blood</th>
+                  <th class="py-3 px-4">Phone</th>
+                  <th class="py-3 px-4">Allergies</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="patientTableBody" class="divide-y divide-slate-100">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- 3. APPOINTMENTS MODULE                                           -->
+      <!-- ================================================================ -->
+      <section id="view-appointments" class="module-view hidden space-y-6">
+        <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">Outpatient Appointments Schedule</h3>
+            <p class="text-xs text-slate-500">Double-booking slot conflict detection automatically enforced.</p>
+          </div>
+          <button onclick="window.NovaCareApp.openModal('bookAppointmentModal')" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition flex items-center shadow-sm">
+            <i class="fa-solid fa-calendar-plus mr-2"></i>Book Appointment
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <th class="py-3 px-4">Appt No</th>
+                  <th class="py-3 px-4">Patient</th>
+                  <th class="py-3 px-4">Doctor & Dept</th>
+                  <th class="py-3 px-4">Date & Time</th>
+                  <th class="py-3 px-4">Reason</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="appointmentsTableBody" class="divide-y divide-slate-100">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- 4. DOCTORS & STAFF DIRECTORY MODULE                              -->
+      <!-- ================================================================ -->
+      <section id="view-doctors" class="module-view hidden space-y-6">
+        <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">Hospital Medical Staff & Specialist Directory</h3>
+            <p class="text-xs text-slate-500">Board-certified physicians, surgeon schedules, and OPD consulting rooms.</p>
+          </div>
+        </div>
+
+        <div id="doctorsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Injected via JavaScript -->
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- 5. CLINICAL / EMR MODULE                                         -->
+      <!-- ================================================================ -->
+      <section id="view-emr" class="module-view hidden space-y-6">
+        <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">Clinical Consultations & Electronic Medical Records</h3>
+            <p class="text-xs text-slate-500">Patient encounter notes, symptoms, diagnostic impressions, and digital prescriptions.</p>
+          </div>
+          <button onclick="window.NovaCareApp.openModal('newConsultationModal')" class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition flex items-center shadow-sm">
+            <i class="fa-solid fa-notes-medical mr-2"></i>Record New Consultation
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <th class="py-3 px-4">Consultation No</th>
+                  <th class="py-3 px-4">Patient</th>
+                  <th class="py-3 px-4">Attending Doctor</th>
+                  <th class="py-3 px-4">Diagnosis</th>
+                  <th class="py-3 px-4">Vitals Observed</th>
+                  <th class="py-3 px-4">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="emrTableBody" class="divide-y divide-slate-100">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- 6. WARDS & BEDS MODULE                                           -->
+      <!-- ================================================================ -->
+      <section id="view-beds" class="module-view hidden space-y-6">
+        <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">Inpatient Department (IPD) & Bed Allocation</h3>
+            <p class="text-xs text-slate-500">Real-time occupancy status across Intensive Care (ICU), General Medical, and Private Suites.</p>
+          </div>
+        </div>
+
+        <div id="bedsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <!-- Injected via JavaScript -->
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- 7. PHARMACY & INVENTORY MODULE                                   -->
+      <!-- ================================================================ -->
+      <section id="view-pharmacy" class="module-view hidden space-y-6">
+        <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">Hospital Pharmacy & Formulary Inventory</h3>
+            <p class="text-xs text-slate-500">Real-time stock management, dosage forms, batch tracking, and reorder alerts.</p>
+          </div>
+          <button onclick="window.NovaCareApp.openModal('addMedicineModal')" class="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-semibold hover:bg-amber-700 transition flex items-center shadow-sm">
+            <i class="fa-solid fa-plus mr-2"></i>Add Medicine to Catalog
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <th class="py-3 px-4">Item Code</th>
+                  <th class="py-3 px-4">Brand Name</th>
+                  <th class="py-3 px-4">Generic Composition</th>
+                  <th class="py-3 px-4">Classification</th>
+                  <th class="py-3 px-4">Unit Price</th>
+                  <th class="py-3 px-4">Stock Units</th>
+                  <th class="py-3 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody id="pharmacyTableBody" class="divide-y divide-slate-100">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- 8. BILLING & INVOICES MODULE                                     -->
+      <!-- ================================================================ -->
+      <section id="view-billing" class="module-view hidden space-y-6">
+        <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">Hospital Accounts & Billing Ledger</h3>
+            <p class="text-xs text-slate-500">Append-only financial records. Receipts, settlements, and payment processing.</p>
+          </div>
+          <button onclick="window.NovaCareApp.openModal('createInvoiceModal')" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition flex items-center shadow-sm">
+            <i class="fa-solid fa-receipt mr-2"></i>Generate Invoice
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <th class="py-3 px-4">Invoice No</th>
+                  <th class="py-3 px-4">Patient</th>
+                  <th class="py-3 px-4">Total Net</th>
+                  <th class="py-3 px-4">Amount Paid</th>
+                  <th class="py-3 px-4">Balance Due</th>
+                  <th class="py-3 px-4">Payment Status</th>
+                  <th class="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="invoicesTableBody" class="divide-y divide-slate-100">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- 9. SYSTEM HEALTH & DIAGNOSTICS MODULE                             -->
+      <!-- ================================================================ -->
+      <section id="view-diagnostics" class="module-view hidden space-y-6">
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+            <div>
+              <h3 class="font-bold text-slate-800 text-lg">Live API Health & Production Diagnostics</h3>
+              <p class="text-xs text-slate-500">Safe monitoring endpoint (<code class="font-mono text-sky-600 bg-sky-50 px-1 py-0.5 rounded">GET /api/health</code>) verifying service availability, database roundtrip latency, and resource metrics without exposing secrets.</p>
+            </div>
+            <div class="flex items-center space-x-3">
+              <span id="healthStatusBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">CHECKING...</span>
+              <button id="refreshDiagnosticsBtn" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-medium text-slate-700 hover:bg-slate-100 transition">
+                <i class="fa-solid fa-arrows-rotate mr-1"></i>Ping Endpoint
+              </button>
+            </div>
+          </div>
+
+          <!-- Key Diagnostic Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+              <span class="text-xs font-medium text-slate-500 block mb-1">Database Connectivity</span>
+              <span class="text-base font-bold text-slate-800 font-mono" id="diagDbStatus">Testing...</span>
+            </div>
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+              <span class="text-xs font-medium text-slate-500 block mb-1">Query Roundtrip Latency</span>
+              <span class="text-base font-bold text-emerald-600 font-mono" id="diagLatency">-- ms</span>
+            </div>
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+              <span class="text-xs font-medium text-slate-500 block mb-1">Service Process Uptime</span>
+              <span class="text-base font-bold text-slate-800 font-mono" id="diagUptime">--</span>
+            </div>
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+              <span class="text-xs font-medium text-slate-500 block mb-1">Heap Memory Usage</span>
+              <span class="text-base font-bold text-slate-800 font-mono" id="diagMemory">--</span>
+            </div>
+          </div>
+
+          <!-- Raw Non-Sensitive JSON Payload -->
+          <div class="rounded-lg bg-slate-900 p-4 text-emerald-400 font-mono text-xs overflow-x-auto">
+            <div class="text-slate-400 text-[10px] uppercase font-sans font-semibold mb-2">Live Response Payload from /api/health</div>
+            <pre id="diagnosticsOutput" class="whitespace-pre-wrap">Pinging diagnostic endpoint...</pre>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: Authentication / Sign In                                      -->
+  <!-- ==================================================================== -->
+  <div id="loginModal" class="modal-backdrop fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="bg-slate-950 p-6 text-center text-white">
+        <div class="w-12 h-12 rounded-xl bg-sky-600 flex items-center justify-center text-white mx-auto mb-3 shadow-lg shadow-sky-600/40">
+          <i class="fa-solid fa-hospital-user text-xl"></i>
+        </div>
+        <h3 class="text-xl font-bold tracking-tight">NovaCare Portal Sign In</h3>
+        <p class="text-xs text-slate-400 mt-1">Authenticate to access clinical modules and patient records</p>
+      </div>
+
+      <div class="p-6">
+        <!-- 1-Click Role Quick Fill Buttons -->
+        <div class="mb-5 pb-5 border-b border-slate-200">
+          <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Quick Demo Accounts (1-Click Fill)</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="window.fillDemoCredentials('admin')" class="py-1 px-2 text-xs font-medium bg-slate-100 hover:bg-sky-100 hover:text-sky-800 rounded border text-slate-700 transition">
+              <i class="fa-solid fa-shield-halved mr-1 text-sky-600"></i>Admin
+            </button>
+            <button type="button" onclick="window.fillDemoCredentials('doctor')" class="py-1 px-2 text-xs font-medium bg-slate-100 hover:bg-sky-100 hover:text-sky-800 rounded border text-slate-700 transition">
+              <i class="fa-solid fa-user-doctor mr-1 text-emerald-600"></i>Dr. Sarah
+            </button>
+            <button type="button" onclick="window.fillDemoCredentials('receptionist')" class="py-1 px-2 text-xs font-medium bg-slate-100 hover:bg-sky-100 hover:text-sky-800 rounded border text-slate-700 transition">
+              <i class="fa-solid fa-id-card-clip mr-1 text-indigo-600"></i>Front Desk
+            </button>
+            <button type="button" onclick="window.fillDemoCredentials('pharmacist')" class="py-1 px-2 text-xs font-medium bg-slate-100 hover:bg-sky-100 hover:text-sky-800 rounded border text-slate-700 transition">
+              <i class="fa-solid fa-prescription-bottle mr-1 text-amber-600"></i>Pharmacist
+            </button>
+            <button type="button" onclick="window.fillDemoCredentials('nurse')" class="py-1 px-2 text-xs font-medium bg-slate-100 hover:bg-sky-100 hover:text-sky-800 rounded border text-slate-700 transition">
+              <i class="fa-solid fa-user-nurse mr-1 text-rose-600"></i>Nurse
+            </button>
+          </div>
+        </div>
+
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Username or Email</label>
+            <input type="text" id="loginUsername" required value="admin"
+                   class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+            <input type="password" id="loginPassword" required value="Admin@123"
+                   class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          </div>
+          <button type="submit" class="w-full py-2.5 bg-sky-600 text-white rounded-lg text-sm font-bold hover:bg-sky-700 transition shadow-md shadow-sky-600/30">
+            Sign In to NovaCare
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: Register New Patient                                          -->
+  <!-- ==================================================================== -->
+  <div id="registerPatientModal" class="modal-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-user-plus text-sky-600 mr-2"></i>Register New Patient (UHID Generation)</h3>
+        <button data-close-modal="registerPatientModal" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="registerPatientForm" class="p-6 overflow-y-auto space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">First Name *</label>
+            <input type="text" id="regFirstName" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Last Name *</label>
+            <input type="text" id="regLastName" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Date of Birth *</label>
+            <input type="date" id="regDob" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Gender *</label>
+            <select id="regGender" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500 bg-white">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Blood Group</label>
+            <select id="regBloodGroup" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500 bg-white">
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="Unknown">Unknown</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Contact Phone *</label>
+            <input type="tel" id="regPhone" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+            <input type="email" id="regEmail" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Residential Address</label>
+            <input type="text" id="regAddress" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">City</label>
+            <input type="text" id="regCity" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Emergency Contact Name *</label>
+            <input type="text" id="regEmergencyName" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500 bg-white">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Emergency Contact Phone *</label>
+            <input type="tel" id="regEmergencyPhone" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500 bg-white">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Known Allergies</label>
+            <input type="text" id="regAllergies" placeholder="e.g. Penicillin, Shellfish" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Medical History Notes</label>
+            <input type="text" id="regMedicalHistory" placeholder="e.g. Hypertension, Asthma" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Insurance Provider</label>
+            <input type="text" id="regInsuranceProvider" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Insurance Policy Number</label>
+            <input type="text" id="regInsurancePolicy" class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-sky-500">
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 flex justify-end space-x-3">
+          <button type="button" data-close-modal="registerPatientModal" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-sky-600 text-white rounded-lg text-sm font-semibold hover:bg-sky-700 shadow-sm">Save & Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: View Patient Profile                                          -->
+  <!-- ==================================================================== -->
+  <div id="patientDetailsModal" class="modal-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-sky-950 text-white">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white">
+            <i class="fa-solid fa-user-injured"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white" id="detailName">Patient Details</h3>
+            <p class="text-xs text-sky-400 font-mono" id="detailUhid">UHID</p>
+          </div>
+        </div>
+        <button data-close-modal="patientDetailsModal" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="p-6 space-y-4 text-sm overflow-y-auto max-h-[70vh]">
+        <div class="grid grid-cols-2 gap-4 pb-3 border-b border-slate-100">
+          <div><span class="text-xs text-slate-400 block">DOB / Age:</span><span id="detailDob" class="font-medium text-slate-800"></span></div>
+          <div><span class="text-xs text-slate-400 block">Gender:</span><span id="detailGender" class="font-medium text-slate-800"></span></div>
+          <div><span class="text-xs text-slate-400 block">Blood Group:</span><span id="detailBloodGroup" class="font-bold text-red-600"></span></div>
+          <div><span class="text-xs text-slate-400 block">Phone:</span><span id="detailPhone" class="font-medium text-slate-800"></span></div>
+          <div><span class="text-xs text-slate-400 block">Email:</span><span id="detailEmail" class="font-medium text-slate-800"></span></div>
+          <div><span class="text-xs text-slate-400 block">Address:</span><span id="detailAddress" class="font-medium text-slate-800"></span></div>
+        </div>
+
+        <div>
+          <span class="text-xs text-slate-400 block">Emergency Contact:</span>
+          <span id="detailEmergency" class="font-medium text-slate-800"></span>
+        </div>
+        <div>
+          <span class="text-xs text-slate-400 block">Known Allergies:</span>
+          <span id="detailAllergies" class="font-medium text-rose-600"></span>
+        </div>
+        <div>
+          <span class="text-xs text-slate-400 block">Medical History:</span>
+          <span id="detailHistory" class="font-medium text-slate-800"></span>
+        </div>
+        <div>
+          <span class="text-xs text-slate-400 block">Insurance:</span>
+          <span id="detailInsurance" class="font-medium text-slate-800"></span>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 border-t border-slate-200 text-right">
+        <button data-close-modal="patientDetailsModal" class="px-4 py-2 bg-slate-700 text-white rounded-lg text-sm font-semibold hover:bg-slate-800">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: Book Appointment (Slot Conflict Protected)                   -->
+  <!-- ==================================================================== -->
+  <div id="bookAppointmentModal" class="modal-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-calendar-check text-indigo-600 mr-2"></i>Book Consultation Slot</h3>
+        <button data-close-modal="bookAppointmentModal" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="bookAppointmentForm" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Select Patient *</label>
+          <select id="apptPatientSelect" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 bg-white">
+            <option value="">Loading patients...</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Attending Physician *</label>
+          <select id="apptDoctorSelect" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 bg-white">
+            <option value="">Loading doctors...</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Date *</label>
+            <input type="date" id="apptDate" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Start Time *</label>
+            <input type="time" id="apptStart" value="09:00" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">End Time *</label>
+            <input type="time" id="apptEnd" value="09:30" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Chief Medical Complaint / Reason *</label>
+          <textarea id="apptReason" required rows="3" placeholder="Describe symptoms or visit reason..." class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex justify-end space-x-3">
+          <button type="button" data-close-modal="bookAppointmentModal" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 shadow-sm">Confirm Booking</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: Record Clinical Consultation & Prescriptions                  -->
+  <!-- ==================================================================== -->
+  <div id="newConsultationModal" class="modal-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-notes-medical text-purple-600 mr-2"></i>Record Clinical Examination & Prescription</h3>
+        <button data-close-modal="newConsultationModal" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="newConsultationForm" class="p-6 overflow-y-auto space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Patient *</label>
+            <select id="emrPatientSelect" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Doctor *</label>
+            <select id="emrDoctorSelect" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white"></select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Symptoms / Chief Complaints *</label>
+          <input type="text" id="emrSymptoms" required placeholder="e.g. Chest tightness, shortness of breath on exertion" class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Clinical Diagnosis *</label>
+          <input type="text" id="emrDiagnosis" required placeholder="e.g. Stage 2 Essential Hypertension" class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+
+        <!-- Vitals Grid -->
+        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Vitals Recorded</label>
+          <div class="grid grid-cols-4 gap-3">
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Blood Pressure</label>
+              <input type="text" id="emrBp" placeholder="120/80" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Pulse (bpm)</label>
+              <input type="number" id="emrPulse" placeholder="72" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Temp (°C)</label>
+              <input type="number" step="0.1" id="emrTemp" placeholder="36.8" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">SpO2 (%)</label>
+              <input type="number" id="emrSpo2" placeholder="98" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+          </div>
+        </div>
+
+        <!-- Prescription -->
+        <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
+          <label class="block text-xs font-bold text-purple-900 uppercase tracking-wider mb-2">Digital Prescription</label>
+          <div class="grid grid-cols-2 gap-3 mb-2">
+            <div>
+              <label class="block text-[11px] text-purple-700 mb-1">Medicine Name</label>
+              <input type="text" id="rxMedicineName" placeholder="e.g. Amlodipine" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] text-purple-700 mb-1">Dosage</label>
+              <input type="text" id="rxDosage" placeholder="e.g. 5mg" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] text-purple-700 mb-1">Frequency</label>
+              <select id="rxFrequency" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+                <option value="Once daily">Once daily</option>
+                <option value="Twice daily">Twice daily</option>
+                <option value="Three times daily">Three times daily</option>
+                <option value="As needed (PRN)">As needed (PRN)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] text-purple-700 mb-1">Duration (days)</label>
+              <input type="number" id="rxDuration" value="7" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] text-purple-700 mb-1">Instructions</label>
+              <input type="text" id="rxInstructions" placeholder="e.g. After breakfast" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Clinical Follow-up Notes</label>
+          <textarea id="emrNotes" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm"></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex justify-end space-x-3">
+          <button type="button" data-close-modal="newConsultationModal" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 shadow-sm">Save Clinical Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: Admit Patient to Bed                                          -->
+  <!-- ==================================================================== -->
+  <div id="admitPatientModal" class="modal-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-bed text-emerald-600 mr-2"></i>Inpatient Bed Admission</h3>
+        <button data-close-modal="admitPatientModal" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="admitPatientForm" class="p-6 space-y-4">
+        <input type="hidden" id="admitBedId">
+        <div class="p-3 bg-emerald-50 rounded-lg text-xs text-emerald-800">
+          Admitting patient to Bed: <strong id="admitBedNumber" class="text-sm font-bold"></strong>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Select Patient *</label>
+          <select id="bedPatientSelect" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white"></select>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex justify-end space-x-3">
+          <button type="button" data-close-modal="admitPatientModal" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 shadow-sm">Confirm Admission</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: Add Medicine to Pharmacy                                      -->
+  <!-- ==================================================================== -->
+  <div id="addMedicineModal" class="modal-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-capsules text-amber-600 mr-2"></i>Add Medicine to Formulary</h3>
+        <button data-close-modal="addMedicineModal" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="addMedicineForm" class="p-6 space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Brand Name *</label>
+            <input type="text" id="medBrandName" required class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Generic Name *</label>
+            <input type="text" id="medGenericName" required class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Category *</label>
+            <input type="text" id="medCategory" required placeholder="e.g. Antibiotic" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Dosage Form *</label>
+            <input type="text" id="medDosageForm" required placeholder="Tablet / Inhaler / Vial" class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Unit Price ($) *</label>
+            <input type="number" step="0.01" id="medUnitPrice" required class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Initial Stock *</label>
+            <input type="number" id="medStockQty" value="100" required class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Reorder Level *</label>
+            <input type="number" id="medReorderLevel" value="30" required class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Expiry Date *</label>
+            <input type="date" id="medExpiryDate" required class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Manufacturer *</label>
+            <input type="text" id="medManufacturer" required class="w-full px-3 py-2 border rounded-lg text-sm">
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex justify-end space-x-3">
+          <button type="button" data-close-modal="addMedicineModal" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-amber-600 text-white rounded-lg text-sm font-semibold hover:bg-amber-700 shadow-sm">Save Medicine</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: Create Invoice                                                -->
+  <!-- ==================================================================== -->
+  <div id="createInvoiceModal" class="modal-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-file-invoice-dollar text-emerald-600 mr-2"></i>Generate Hospital Invoice</h3>
+        <button data-close-modal="createInvoiceModal" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="createInvoiceForm" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Select Patient *</label>
+          <select id="invoicePatientSelect" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white"></select>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Line Item</label>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Item Description *</label>
+              <input type="text" id="invItemName" required placeholder="e.g. Cardiology OPD Consultation" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Service Type *</label>
+              <select id="invItemType" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+                <option value="Consultation">Consultation</option>
+                <option value="Procedure">Procedure</option>
+                <option value="Room_Charge">Room Charge</option>
+                <option value="Medicine">Medicine</option>
+                <option value="Lab_Test">Lab Test</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Unit Price ($) *</label>
+              <input type="number" step="0.01" id="invItemPrice" value="150.00" required class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Quantity *</label>
+              <input type="number" id="invItemQty" value="1" required class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">Discount ($)</label>
+              <input type="number" step="0.01" id="invDiscount" value="0.00" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex justify-end space-x-3">
+          <button type="button" data-close-modal="createInvoiceModal" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 shadow-sm">Issue Invoice</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: Record Payment                                                -->
+  <!-- ==================================================================== -->
+  <div id="recordPaymentModal" class="modal-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-dollar-sign text-emerald-600 mr-2"></i>Record Patient Payment</h3>
+        <button data-close-modal="recordPaymentModal" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form id="recordPaymentForm" class="p-6 space-y-4">
+        <input type="hidden" id="payInvoiceId">
+
+        <div class="p-3 bg-emerald-50 rounded-lg text-xs text-emerald-900 flex justify-between items-center">
+          <div>Invoice: <strong id="payInvoiceNo" class="font-mono text-sm"></strong></div>
+          <div>Due: <strong id="payBalanceDue" class="font-bold text-sm text-rose-600"></strong></div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Amount to Pay ($) *</label>
+          <input type="number" step="0.01" id="payAmount" required class="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 font-bold">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Payment Method *</label>
+          <select id="payMethod" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
+            <option value="Cash">Cash</option>
+            <option value="Credit_Card">Credit Card</option>
+            <option value="Debit_Card">Debit Card</option>
+            <option value="Insurance">Insurance Provider</option>
+            <option value="Bank_Transfer">Bank Wire Transfer</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Receipt / Audit Notes</label>
+          <input type="text" id="payNotes" placeholder="Front desk receipt reference" class="w-full px-3 py-2 border rounded-lg text-sm">
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex justify-end space-x-3">
+          <button type="button" data-close-modal="recordPaymentModal" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 shadow-sm">Submit Payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: Printable Receipt                                             -->
+  <!-- ==================================================================== -->
+  <div id="printableReceiptModal" class="modal-backdrop fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="modal-content bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
+      <div id="printableReceipt" class="p-8 space-y-6">
+        <!-- Receipt Header -->
+        <div class="flex justify-between items-start border-b border-slate-200 pb-4">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900">NovaCare Medical Center</h2>
+            <p class="text-xs text-slate-500">742 Healthcare Boulevard, Metropolis</p>
+            <p class="text-xs text-slate-500">Emergency & OPD: +1-800-NOVACARE</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400 block uppercase font-mono">Invoice</span>
+            <span class="font-mono font-bold text-sm text-sky-700" id="rcptInvoiceNo">INV-XXXX</span>
+            <span class="text-xs text-slate-500 block" id="rcptDate">Date</span>
+          </div>
+        </div>
+
+        <!-- Patient Demographics -->
+        <div class="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
+          <div>
+            <span class="text-slate-400 block">Patient Name:</span>
+            <span class="font-bold text-slate-800" id="rcptPatientName">Name</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">Patient UHID:</span>
+            <span class="font-mono font-bold text-slate-800" id="rcptPatientUhid">UHID</span>
+          </div>
+        </div>
+
+        <!-- Line Items -->
+        <div>
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-slate-200 text-slate-400 uppercase font-semibold">
+                <th class="py-2">Item Description</th>
+                <th class="py-2 text-center">Qty</th>
+                <th class="py-2 text-right">Price</th>
+                <th class="py-2 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="rcptItemsBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Totals Summary -->
+        <div class="pt-3 border-t border-slate-200 space-y-1 text-xs">
+          <div class="flex justify-between"><span class="text-slate-500">Net Payable:</span><span class="font-bold" id="rcptTotal">$0.00</span></div>
+          <div class="flex justify-between"><span class="text-slate-500">Amount Paid:</span><span class="font-bold text-emerald-600" id="rcptPaid">$0.00</span></div>
+          <div class="flex justify-between text-sm pt-2 border-t border-slate-100"><span class="font-bold text-slate-800">Balance Due:</span><span class="font-bold text-rose-600" id="rcptBalance">$0.00</span></div>
+          <div class="flex justify-between text-xs pt-1"><span class="text-slate-500">Status:</span><span class="font-semibold uppercase" id="rcptStatus">PAID</span></div>
+        </div>
+
+        <div class="text-center pt-4 border-t border-dashed border-slate-200 text-[11px] text-slate-400">
+          Thank you for choosing NovaCare Hospital. Wishing you swift recovery and optimal wellness.
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end space-x-3 no-print">
+        <button data-close-modal="printableReceiptModal" class="px-4 py-2 border rounded-lg text-sm text-slate-600 hover:bg-slate-100">Close</button>
+        <button onclick="window.print()" class="px-5 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 shadow-sm flex items-center">
+          <i class="fa-solid fa-print mr-2"></i>Print Receipt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Runtime Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
