@@ -76,15 +76,15 @@ async function createMedicine(req, res, next) {
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         medCode,
-        brand_name.trim(),
-        generic_name.trim(),
-        category.trim(),
-        dosage_form.trim(),
-        parseFloat(unit_price),
-        qty,
-        reorder,
+        (brand_name || '').trim(),
+        (generic_name || '').trim(),
+        (category || '').trim(),
+        (dosage_form || '').trim(),
+        parseFloat(unit_price) || 0,
+        qty || 0,
+        reorder || 50,
         expiry_date,
-        manufacturer.trim(),
+        (manufacturer || '').trim(),
         status
       ]
     );

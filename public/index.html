@@ -297,7 +297,7 @@
             </select>
           </div>
 
-          <button onclick="window.NovaCareApp.openModal('registerPatientModal')" class="w-full sm:w-auto px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-semibold hover:bg-sky-700 transition flex items-center justify-center shadow-sm">
+          <button data-open-modal="registerPatientModal" onclick="window.NovaCareApp.openModal('registerPatientModal')" class="w-full sm:w-auto px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-semibold hover:bg-sky-700 transition flex items-center justify-center shadow-sm">
             <i class="fa-solid fa-user-plus mr-2"></i>Register New Patient
           </button>
         </div>
@@ -334,7 +334,7 @@
             <h3 class="font-bold text-slate-800 text-base">Outpatient Appointments Schedule</h3>
             <p class="text-xs text-slate-500">Double-booking slot conflict detection automatically enforced.</p>
           </div>
-          <button onclick="window.NovaCareApp.openModal('bookAppointmentModal')" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition flex items-center shadow-sm">
+          <button data-open-modal="bookAppointmentModal" onclick="window.NovaCareApp.openModal('bookAppointmentModal')" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition flex items-center shadow-sm">
             <i class="fa-solid fa-calendar-plus mr-2"></i>Book Appointment
           </button>
         </div>
@@ -370,7 +370,7 @@
             <h3 class="font-bold text-slate-800 text-base">Hospital Medical Staff & Specialist Directory</h3>
             <p class="text-xs text-slate-500">Board-certified physicians, surgeon schedules, and OPD consulting rooms.</p>
           </div>
-          <button onclick="window.NovaCareApp.openModal('addDoctorModal')" class="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-semibold hover:bg-teal-700 transition flex items-center shadow-sm">
+          <button data-open-modal="addDoctorModal" onclick="window.NovaCareApp.openModal('addDoctorModal')" class="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-semibold hover:bg-teal-700 transition flex items-center shadow-sm">
             <i class="fa-solid fa-user-doctor mr-2"></i>Add New Doctor
           </button>
         </div>
@@ -389,7 +389,7 @@
             <h3 class="font-bold text-slate-800 text-base">Clinical Consultations & Electronic Medical Records</h3>
             <p class="text-xs text-slate-500">Patient encounter notes, symptoms, diagnostic impressions, and digital prescriptions.</p>
           </div>
-          <button onclick="window.NovaCareApp.openModal('newConsultationModal')" class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition flex items-center shadow-sm">
+          <button data-open-modal="newConsultationModal" onclick="window.NovaCareApp.openModal('newConsultationModal')" class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition flex items-center shadow-sm">
             <i class="fa-solid fa-notes-medical mr-2"></i>Record New Consultation
           </button>
         </div>
@@ -424,7 +424,7 @@
             <h3 class="font-bold text-slate-800 text-base">Inpatient Department (IPD) & Bed Allocation</h3>
             <p class="text-xs text-slate-500">Real-time occupancy status across Intensive Care (ICU), General Medical, and Private Suites.</p>
           </div>
-          <button onclick="window.NovaCareApp.openModal('addBedModal')" class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-semibold hover:bg-rose-700 transition flex items-center shadow-sm">
+          <button data-open-modal="addBedModal" onclick="window.NovaCareApp.openModal('addBedModal')" class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-semibold hover:bg-rose-700 transition flex items-center shadow-sm">
             <i class="fa-solid fa-bed mr-2"></i>Add New Bed
           </button>
         </div>
@@ -443,7 +443,7 @@
             <h3 class="font-bold text-slate-800 text-base">Hospital Pharmacy & Formulary Inventory</h3>
             <p class="text-xs text-slate-500">Real-time stock management, dosage forms, batch tracking, and reorder alerts.</p>
           </div>
-          <button onclick="window.NovaCareApp.openModal('addMedicineModal')" class="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-semibold hover:bg-amber-700 transition flex items-center shadow-sm">
+          <button data-open-modal="addMedicineModal" onclick="window.NovaCareApp.openModal('addMedicineModal')" class="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-semibold hover:bg-amber-700 transition flex items-center shadow-sm">
             <i class="fa-solid fa-plus mr-2"></i>Add Medicine to Catalog
           </button>
         </div>
@@ -479,7 +479,7 @@
             <h3 class="font-bold text-slate-800 text-base">Hospital Accounts & Billing Ledger</h3>
             <p class="text-xs text-slate-500">Append-only financial records. Receipts, settlements, and payment processing.</p>
           </div>
-          <button onclick="window.NovaCareApp.openModal('createInvoiceModal')" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition flex items-center shadow-sm">
+          <button data-open-modal="createInvoiceModal" onclick="window.NovaCareApp.openModal('createInvoiceModal')" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition flex items-center shadow-sm">
             <i class="fa-solid fa-receipt mr-2"></i>Generate Invoice
           </button>
         </div>

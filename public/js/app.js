@@ -84,6 +84,9 @@
     if (modal) {
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+      if (['bookAppointmentModal', 'newConsultationModal', 'addBedModal', 'admitPatientModal', 'createInvoiceModal'].includes(modalId)) {
+        populateModalDropdowns();
+      }
     }
   }
 
@@ -114,6 +117,7 @@
       state.currentUser = res.data.user;
       renderUserBadge();
       closeModal('loginModal');
+      populateModalDropdowns();
       loadModule(state.currentModule);
     } catch (err) {
       window.NovaCareApi.clearAuth();
@@ -173,6 +177,7 @@
       renderUserBadge();
       closeModal('loginModal');
       showToast(`Welcome back, ${state.currentUser.full_name}!`, 'success');
+      populateModalDropdowns();
       loadModule(state.currentModule);
     } catch (err) {
       showToast(err.message || 'Login failed. Please check credentials.', 'error');
@@ -495,6 +500,7 @@
       closeModal('registerPatientModal');
       document.getElementById('registerPatientForm').reset();
       loadPatients();
+      populateModalDropdowns();
     } catch (err) {
       showToast(err.message || 'Error registering patient.', 'error');
     }
@@ -665,6 +671,9 @@
 
   // Populate Doctor, Patient and Ward Selects for Modals
   async function populateModalDropdowns() {
+    const token = window.NovaCareApi.getToken();
+    if (!token) return;
+
     try {
       const [patientsRes, doctorsRes, bedsRes] = await Promise.all([
         window.NovaCareApi.getPatients({ limit: 100 }),
@@ -1313,7 +1322,15 @@
   // ==========================================================================
   // Event Bindings and Initialization
   // ==========================================================================
-  document.addEventListener('DOMContentLoaded', () => {
+  function onReady(fn) {
+    if (document.readyState !== 'loading') {
+      fn();
+    } else {
+      document.addEventListener('DOMContentLoaded', fn);
+    }
+  }
+
+  onReady(() => {
     // Navigation links
     document.querySelectorAll('.nav-link').forEach((link) => {
       link.addEventListener('click', (e) => {
@@ -1347,7 +1364,14 @@
     // Refresh buttons
     document.getElementById('refreshDiagnosticsBtn')?.addEventListener('click', loadDiagnostics);
 
-    // Modal Close Buttons
+    // Modal Open & Close Buttons
+    document.querySelectorAll('[data-open-modal]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.dataset.openModal;
+        openModal(modalId);
+      });
+    });
+
     document.querySelectorAll('[data-close-modal]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const modalId = btn.dataset.closeModal;
