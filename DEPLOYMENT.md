@@ -39,7 +39,7 @@ Railway provides integrated Node.js hosting with a native MySQL database plugin.
 git add .
 git commit -m "feat: complete production-ready NovaCare Hospital Management System"
 git branch -M main
-git remote add origin https://github.com/<your-username>/novacare-hospital-management-system.git
+git remote add origin https://github.com/danishalipny-pixel/NovaCare-Medical-Center.git
 git push -u origin main
 ```
 
@@ -151,7 +151,7 @@ EXIT;
 ### 4. Clone Repository & Install Dependencies
 ```bash
 cd /var/www
-sudo git clone https://github.com/<your-username>/novacare-hospital-management-system.git
+sudo git clone https://github.com/danishalipny-pixel/NovaCare-Medical-Center.git
 cd novacare-hospital-management-system
 sudo chown -R $USER:$USER .
 
@@ -233,7 +233,7 @@ For microservice environments or container clusters:
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/<your-username>/novacare-hospital-management-system.git
+git clone https://github.com/danishalipny-pixel/NovaCare-Medical-Center.git
 cd novacare-hospital-management-system
 
 # 2. Configure .env file

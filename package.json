@@ -21,6 +21,14 @@
     "patient-records"
   ],
   "author": "NovaCare Health Systems",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danishalipny-pixel/NovaCare-Medical-Center.git"
+  },
+  "homepage": "https://github.com/danishalipny-pixel/NovaCare-Medical-Center#readme",
+  "bugs": {
+    "url": "https://github.com/danishalipny-pixel/NovaCare-Medical-Center/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^3.0.3",
