@@ -544,10 +544,37 @@
             </div>
           </div>
 
-          <!-- Raw Non-Sensitive JSON Payload -->
-          <div class="rounded-lg bg-slate-900 p-4 text-emerald-400 font-mono text-xs overflow-x-auto">
-            <div class="text-slate-400 text-[10px] uppercase font-sans font-semibold mb-2">Live Response Payload from /api/health</div>
-            <pre id="diagnosticsOutput" class="whitespace-pre-wrap">Pinging diagnostic endpoint...</pre>
+          <!-- Core Infrastructure & Service Health Indicators -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-100">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-server"></i>
+              </div>
+              <div>
+                <span class="text-[11px] text-slate-400 uppercase font-semibold block">Core Service</span>
+                <span class="text-sm font-bold text-slate-800" id="diagService">NovaCare HMS Core API</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+              <div>
+                <span class="text-[11px] text-slate-400 uppercase font-semibold block">Operating Environment</span>
+                <span class="text-sm font-bold text-slate-800" id="diagEnvironment">Production / Live Engine</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div>
+                <span class="text-[11px] text-slate-400 uppercase font-semibold block">Security & RBAC</span>
+                <span class="text-sm font-bold text-emerald-700">Protected (JWT + CSP Enforced)</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

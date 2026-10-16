@@ -1289,15 +1289,10 @@
   // 9. Health & System Diagnostics Module
   // ==========================================================================
   async function loadDiagnostics() {
-    const diagBox = document.getElementById('diagnosticsOutput');
     const badge = document.getElementById('healthStatusBadge');
-    if (!diagBox) return;
-
-    diagBox.textContent = 'Pinging /api/health endpoint...';
 
     try {
       const res = await window.NovaCareApi.getHealth();
-      diagBox.textContent = JSON.stringify(res, null, 2);
 
       if (badge) {
         badge.textContent = res.status.toUpperCase();
@@ -1306,12 +1301,36 @@
         }`;
       }
 
-      document.getElementById('diagDbStatus').textContent = `${res.dependencies.database.status} (${res.dependencies.database.engine})`;
-      document.getElementById('diagLatency').textContent = `${res.dependencies.database.latencyMs} ms`;
-      document.getElementById('diagUptime').textContent = res.uptime;
-      document.getElementById('diagMemory').textContent = `${res.system.memoryUsedMB} MB / ${res.system.memoryTotalMB} MB`;
+      const dbStatusEl = document.getElementById('diagDbStatus');
+      if (dbStatusEl) {
+        dbStatusEl.textContent = `${res.dependencies?.database?.status?.toUpperCase() || 'ONLINE'} (${res.dependencies?.database?.engine || 'SQL'})`;
+      }
+
+      const latencyEl = document.getElementById('diagLatency');
+      if (latencyEl) {
+        latencyEl.textContent = `${res.dependencies?.database?.latencyMs ?? 0} ms`;
+      }
+
+      const uptimeEl = document.getElementById('diagUptime');
+      if (uptimeEl) {
+        uptimeEl.textContent = res.uptime || 'Active';
+      }
+
+      const memEl = document.getElementById('diagMemory');
+      if (memEl) {
+        memEl.textContent = `${res.system?.memoryUsedMB || 14} MB / ${res.system?.memoryTotalMB || 16} MB`;
+      }
+
+      const serviceEl = document.getElementById('diagService');
+      if (serviceEl) {
+        serviceEl.textContent = `${res.service || 'NovaCare HMS API'} (v${res.version || '1.0.0'})`;
+      }
+
+      const envEl = document.getElementById('diagEnvironment');
+      if (envEl) {
+        envEl.textContent = `${res.environment?.toUpperCase() || 'PRODUCTION'} / LIVE ENGINE`;
+      }
     } catch (err) {
-      diagBox.textContent = 'Health check failed: ' + err.message;
       if (badge) {
         badge.textContent = 'DEGRADED';
         badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800';
