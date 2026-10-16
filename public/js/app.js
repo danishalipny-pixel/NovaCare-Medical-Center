@@ -654,13 +654,28 @@
     }
   };
 
-  // Populate Doctor and Patient Selects for Modals
+  function populateWardDropdown() {
+    const sel = document.getElementById('bedWardSelect');
+    if (!sel || !state.wards || state.wards.length === 0) return;
+    sel.innerHTML = '<option value="">-- Select Inpatient Ward --</option>' +
+      state.wards
+        .map((w) => `<option value="${w.id}">${escapeHtml(w.ward_name)} (${escapeHtml(w.ward_type)}) - $${parseFloat(w.daily_charge).toFixed(2)}/day</option>`)
+        .join('');
+  }
+
+  // Populate Doctor, Patient and Ward Selects for Modals
   async function populateModalDropdowns() {
     try {
-      const [patientsRes, doctorsRes] = await Promise.all([
+      const [patientsRes, doctorsRes, bedsRes] = await Promise.all([
         window.NovaCareApi.getPatients({ limit: 100 }),
-        window.NovaCareApi.getDoctors()
+        window.NovaCareApi.getDoctors(),
+        window.NovaCareApi.getBeds().catch(() => ({ data: { wards: [], beds: [] } }))
       ]);
+
+      if (bedsRes?.data?.wards) {
+        state.wards = bedsRes.data.wards;
+        populateWardDropdown();
+      }
 
       // Patients dropdowns
       const patientSelects = [
@@ -766,6 +781,34 @@
       .join('');
   }
 
+  async function handleAddDoctor(e) {
+    e.preventDefault();
+    const payload = {
+      full_name: document.getElementById('docFullName').value.trim(),
+      specialization: document.getElementById('docSpecialization').value.trim(),
+      department: document.getElementById('docDepartment').value,
+      qualification: document.getElementById('docQualification').value.trim(),
+      consultation_fee: parseFloat(document.getElementById('docFee').value || 100),
+      room_no: document.getElementById('docRoom').value.trim(),
+      phone: document.getElementById('docPhone').value.trim(),
+      email: document.getElementById('docEmail').value.trim(),
+      available_days: document.getElementById('docDays').value.trim(),
+      start_time: document.getElementById('docStartTime').value,
+      end_time: document.getElementById('docEndTime').value
+    };
+
+    try {
+      const res = await window.NovaCareApi.createDoctor(payload);
+      showToast(`Doctor profile created: ${res.data.full_name} (${res.data.doctor_code})`, 'success');
+      closeModal('addDoctorModal');
+      document.getElementById('addDoctorForm').reset();
+      loadDoctors();
+      populateModalDropdowns();
+    } catch (err) {
+      showToast(err.message || 'Error creating doctor profile.', 'error');
+    }
+  }
+
   // ==========================================================================
   // 5. Clinical / EMR Module
   // ==========================================================================
@@ -855,6 +898,7 @@
       const res = await window.NovaCareApi.getBeds();
       state.wards = res.data.wards || [];
       state.beds = res.data.beds || [];
+      populateWardDropdown();
       renderBedsGrid(state.beds);
     } catch (err) {
       grid.innerHTML = `<div class="col-span-4 text-center py-6 text-rose-500">Error loading beds: ${escapeHtml(err.message)}</div>`;
@@ -967,6 +1011,27 @@
       showToast(err.message || 'Error discharging bed.', 'error');
     }
   };
+
+  async function handleAddBed(e) {
+    e.preventDefault();
+    const wardId = parseInt(document.getElementById('bedWardSelect').value, 10);
+    const bedNumber = document.getElementById('bedNumberInput').value.trim();
+
+    if (!wardId || !bedNumber) {
+      showToast('Please select a ward and enter a valid bed number.', 'warning');
+      return;
+    }
+
+    try {
+      const res = await window.NovaCareApi.createBed({ ward_id: wardId, bed_number: bedNumber });
+      showToast(res.message || `Bed ${bedNumber} created successfully!`, 'success');
+      closeModal('addBedModal');
+      document.getElementById('addBedForm').reset();
+      loadBeds();
+    } catch (err) {
+      showToast(err.message || 'Error creating bed.', 'error');
+    }
+  }
 
   // ==========================================================================
   // 7. Pharmacy & Inventory Module
@@ -1262,6 +1327,8 @@
     document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
     document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
     document.getElementById('registerPatientForm')?.addEventListener('submit', handleRegisterPatient);
+    document.getElementById('addDoctorForm')?.addEventListener('submit', handleAddDoctor);
+    document.getElementById('addBedForm')?.addEventListener('submit', handleAddBed);
     document.getElementById('bookAppointmentForm')?.addEventListener('submit', handleBookAppointment);
     document.getElementById('newConsultationForm')?.addEventListener('submit', handleCreateConsultation);
     document.getElementById('admitPatientForm')?.addEventListener('submit', handleAdmitPatient);

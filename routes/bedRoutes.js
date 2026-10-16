@@ -12,6 +12,13 @@ router.use(verifyToken);
 router.get('/', bedController.getWardsAndBeds);
 
 router.post(
+  '/',
+  requireRoles('ADMIN', 'RECEPTIONIST', 'NURSE'),
+  validateBody(['ward_id', 'bed_number']),
+  bedController.createBed
+);
+
+router.post(
   '/admit',
   requireRoles('ADMIN', 'RECEPTIONIST', 'DOCTOR', 'NURSE'),
   validateBody(['bed_id', 'patient_id']),

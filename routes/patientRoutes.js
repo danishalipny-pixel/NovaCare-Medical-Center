@@ -26,10 +26,9 @@ router.post(
   '/',
   requireRoles('ADMIN', 'RECEPTIONIST', 'DOCTOR'),
   validateBody(
-    ['first_name', 'last_name', 'date_of_birth', 'gender', 'phone', 'emergency_contact_name', 'emergency_contact_phone'],
+    ['first_name', 'last_name', 'phone'],
     {
-      phone: (val) => (val && val.length < 7 ? 'Phone number must be at least 7 characters' : null),
-      emergency_contact_phone: (val) => (val && val.length < 7 ? 'Emergency phone must be at least 7 characters' : null)
+      phone: (val) => (val && val.length < 7 ? 'Phone number must be at least 7 characters' : null)
     }
   ),
   patientController.createPatient

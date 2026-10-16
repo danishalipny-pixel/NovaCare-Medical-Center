@@ -99,11 +99,11 @@ async function createDoctor(req, res, next) {
       full_name,
       specialization,
       department,
-      qualification,
+      qualification = 'MBBS, MD',
       consultation_fee = 100.0,
-      room_no,
-      phone,
-      email,
+      room_no = 'Suite 101',
+      phone = '+1-555-0100',
+      email = '',
       available_days = 'Monday,Tuesday,Wednesday,Thursday,Friday',
       start_time = '09:00:00',
       end_time = '17:00:00'
@@ -119,17 +119,17 @@ async function createDoctor(req, res, next) {
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVE')`,
       [
         doctor_code,
-        full_name.trim(),
-        specialization.trim(),
-        department.trim(),
-        qualification.trim(),
-        parseFloat(consultation_fee),
-        room_no.trim(),
-        phone.trim(),
-        email.trim(),
-        available_days,
-        start_time,
-        end_time
+        (full_name || '').trim(),
+        (specialization || '').trim(),
+        (department || '').trim(),
+        (qualification || 'MBBS, MD').trim(),
+        parseFloat(consultation_fee) || 100.0,
+        (room_no || 'Suite 101').trim(),
+        (phone || '+1-555-0100').trim(),
+        (email || '').trim(),
+        available_days || 'Monday,Tuesday,Wednesday,Thursday,Friday',
+        start_time || '09:00:00',
+        end_time || '17:00:00'
       ]
     );
 

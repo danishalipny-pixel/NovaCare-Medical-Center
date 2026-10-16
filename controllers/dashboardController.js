@@ -36,8 +36,8 @@ async function getStats(req, res, next) {
 
     // 4. Financial Statistics (Today's Collections & Total Unpaid)
     const [paymentRows] = await db.query(
-      'SELECT COALESCE(SUM(amount), 0) AS today_revenue FROM payments WHERE DATE(payment_date) = ?',
-      [today]
+      'SELECT COALESCE(SUM(amount), 0) AS today_revenue FROM payments WHERE payment_date LIKE ?',
+      [`${today}%`]
     );
     const todayRevenue = Number(paymentRows[0]?.today_revenue || 0);
 
@@ -85,12 +85,17 @@ async function getStats(req, res, next) {
 async function getCharts(req, res, next) {
   try {
     // 1. Weekly Appointment Volume (Last 7 Days)
+    const sevenDaysAgoDate = new Date();
+    sevenDaysAgoDate.setDate(sevenDaysAgoDate.getDate() - 7);
+    const sevenDaysAgo = sevenDaysAgoDate.toISOString().split('T')[0];
+
     const [weeklyAppts] = await db.query(
       `SELECT appointment_date, COUNT(*) AS count
        FROM appointments
-       WHERE appointment_date >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
+       WHERE appointment_date >= ?
        GROUP BY appointment_date
-       ORDER BY appointment_date ASC`
+       ORDER BY appointment_date ASC`,
+      [sevenDaysAgo]
     );
 
     // 2. Department Patient Distribution

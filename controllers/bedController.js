@@ -153,8 +153,33 @@ async function dischargePatient(req, res, next) {
   }
 }
 
+/**
+ * Add New Bed
+ * POST /api/beds
+ */
+async function createBed(req, res, next) {
+  try {
+    const { ward_id, bed_number } = req.body;
+    const [result] = await db.query(
+      `INSERT INTO beds (ward_id, bed_number, status) VALUES (?, ?, 'Available')`,
+      [parseInt(ward_id, 10), bed_number.trim().toUpperCase()]
+    );
+    const newId = result.insertId || result.lastID;
+    await logAudit(req, 'BED_CREATED', 'beds', newId, { bed_number, ward_id });
+    res.status(201).json({
+      success: true,
+      message: `Bed ${bed_number.trim().toUpperCase()} created and available for admission.`,
+      data: { id: newId, bed_number: bed_number.trim().toUpperCase(), status: 'Available' },
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getWardsAndBeds,
   admitPatient,
-  dischargePatient
+  dischargePatient,
+  createBed
 };

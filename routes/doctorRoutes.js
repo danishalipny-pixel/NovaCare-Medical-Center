@@ -14,8 +14,8 @@ router.get('/:id', doctorController.getDoctorById);
 
 router.post(
   '/',
-  requireRoles('ADMIN'),
-  validateBody(['full_name', 'specialization', 'department', 'qualification', 'room_no', 'phone', 'email']),
+  requireRoles('ADMIN', 'RECEPTIONIST'),
+  validateBody(['full_name', 'specialization', 'department']),
   doctorController.createDoctor
 );
 

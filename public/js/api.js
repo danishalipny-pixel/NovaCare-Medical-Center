@@ -263,6 +263,13 @@
       });
     },
 
+    createBed: function (bedData) {
+      return this.request('/beds', {
+        method: 'POST',
+        body: bedData
+      });
+    },
+
     // ----------------------------------------------------
     // Pharmacy Endpoints
     // ----------------------------------------------------

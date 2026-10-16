@@ -10,10 +10,11 @@ const { validateBody } = require('../middleware/validate');
 router.use(verifyToken);
 
 router.get('/', pharmacyController.getMedicines);
+router.get('/medicines', pharmacyController.getMedicines);
 
 router.post(
   '/medicines',
-  requireRoles('ADMIN', 'PHARMACIST'),
+  requireRoles('ADMIN', 'PHARMACIST', 'RECEPTIONIST'),
   validateBody(['brand_name', 'generic_name', 'category', 'dosage_form', 'unit_price', 'expiry_date', 'manufacturer']),
   pharmacyController.createMedicine
 );

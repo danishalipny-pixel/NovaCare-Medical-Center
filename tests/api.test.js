@@ -404,4 +404,111 @@ describe('🏥 NovaCare Hospital Management System - Live API Integration Tests'
       assert.equal(res.body.data.invoice.payment_status, 'Paid');
     });
   });
+
+  // ==========================================================================
+  // 7. Dashboard Analytics & Statistics Tests
+  // ==========================================================================
+  describe('G. Dashboard Analytics & Cross-DB Compatibility', () => {
+    it('GET /api/dashboard/stats should return 200 with all 6 hospital KPIs', async () => {
+      const res = await request(app)
+        .get('/api/dashboard/stats')
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      assert.equal(res.status, 200);
+      assert.equal(res.body.success, true);
+      assert.ok(typeof res.body.data.totalPatients === 'number');
+      assert.ok(typeof res.body.data.todayAppointments === 'number');
+      assert.ok(typeof res.body.data.occupancyRate === 'number');
+      assert.ok(typeof res.body.data.todayRevenue === 'number');
+      assert.ok(typeof res.body.data.lowStockAlerts === 'number');
+    });
+
+    it('GET /api/dashboard/charts should return 200 without SQL interval errors', async () => {
+      const res = await request(app)
+        .get('/api/dashboard/charts')
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      assert.equal(res.status, 200);
+      assert.equal(res.body.success, true);
+      assert.ok(Array.isArray(res.body.data.weeklyAppointments));
+      assert.ok(Array.isArray(res.body.data.departmentDistribution));
+      assert.ok(Array.isArray(res.body.data.wardOccupancy));
+    });
+  });
+
+  // ==========================================================================
+  // 8. Pharmacy Catalog & Routing Tests
+  // ==========================================================================
+  describe('H. Pharmacy Catalog & Medicine Endpoints', () => {
+    it('GET /api/pharmacy/medicines should return 200 with catalog array', async () => {
+      const res = await request(app)
+        .get('/api/pharmacy/medicines')
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      assert.equal(res.status, 200);
+      assert.equal(res.body.success, true);
+      assert.ok(Array.isArray(res.body.data));
+    });
+
+    it('GET /api/pharmacy should also route to getMedicines and return 200', async () => {
+      const res = await request(app)
+        .get('/api/pharmacy')
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      assert.equal(res.status, 200);
+      assert.equal(res.body.success, true);
+      assert.ok(Array.isArray(res.body.data));
+    });
+  });
+
+  // ==========================================================================
+  // 9. Doctor & Inpatient Bed Creation Tests
+  // ==========================================================================
+  describe('I. Doctor & Bed Management Creation Workflows', () => {
+    it('POST /api/doctors should create doctor with defaults and return 201 Created', async () => {
+      const res = await request(app)
+        .post('/api/doctors')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          full_name: 'Dr. Evelyn Reed',
+          specialization: 'Neurologist',
+          department: 'Neurology'
+        });
+
+      assert.equal(res.status, 201);
+      assert.equal(res.body.success, true);
+      assert.ok(res.body.data.doctor_code.startsWith('DOC-'));
+      assert.equal(res.body.data.full_name, 'Dr. Evelyn Reed');
+    });
+
+    it('POST /api/beds should create new bed in ward and return 201 Created', async () => {
+      const res = await request(app)
+        .post('/api/beds')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          ward_id: 1,
+          bed_number: 'ICU-999'
+        });
+
+      assert.equal(res.status, 201);
+      assert.equal(res.body.success, true);
+      assert.equal(res.body.data.bed_number, 'ICU-999');
+      assert.equal(res.body.data.status, 'Available');
+    });
+
+    it('POST /api/patients with minimal valid inputs should return 201 Created', async () => {
+      const res = await request(app)
+        .post('/api/patients')
+        .set('Authorization', `Bearer ${receptionistToken}`)
+        .send({
+          first_name: 'Sophia',
+          last_name: 'Martinez',
+          phone: '+1-555-7711'
+        });
+
+      assert.equal(res.status, 201);
+      assert.equal(res.body.success, true);
+      assert.ok(res.body.data.uhid.startsWith('NC-'));
+    });
+  });
 });
